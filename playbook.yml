@@ -1,0 +1,42 @@
+---
+- name: Install synapse
+  hosts: matrix-synapse
+  vars_files: secrets.yml
+
+  tasks: 
+    - name: Ensure data directory is mounted
+      mount:
+        path: /srv/data
+        src: /dev/main/data
+        fstype: ext4
+        state: present
+    - name: Install synapse
+      apt:
+        name: matrix-synapse
+        default_release: bullseye-backports
+        state: present
+        update_cache: yes
+    - name: Install synapse configuration
+      template:
+        src: homeserver.yaml
+        dest: /etc/matrix-synapse/homeserver2.yaml
+        # The configuration contains jinja2 templates, so change default escape string
+        variable_start_string: '[%'
+        variable_end_string: '%]'
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+    - name: Install nginx configuration
+      copy:
+        src: nginx.conf
+        dest: /etc/nginx/sites-available/matrix.law-orga.de
+      register: nginx
+    - name: Reload nginx
+      when: nginx.changed
+      service:
+        name: nginx
+        state: reloaded
+        enabled: yes
+
+
