@@ -4,16 +4,16 @@
 # autogenerates on launch with your own SSL certificate + key pair
 # if you like.  Any required intermediary certificates can be
 # appended after the primary certificate in hierarchical order.
-tls_certificate_path: "/etc/matrix-synapse/homeserver.tls.crt"
+#tls_certificate_path: "/data/homeserver.tls.crt"
 
 # PEM encoded private key for TLS
-tls_private_key_path: "/etc/matrix-synapse/homeserver.tls.key"
+#tls_private_key_path: "/data/homeserver.tls.key"
 
 # PEM dh parameters for ephemeral keys
-tls_dh_params_path: "/etc/matrix-synapse/homeserver.tls.dh"
+#tls_dh_params_path: "/data/homeserver.tls.dh"
 
 # Don't bind to the https port
-no_tls: False
+no_tls: True
 
 # List of allowed TLS fingerprints for this server to publish along
 # with the signing keys for this server. Other matrix servers that
@@ -48,6 +48,12 @@ tls_fingerprints: []
 
 # When running as a daemon, the file to store the pid in
 pid_file: "/var/run/matrix-synapse.pid"
+
+# Name of the server
+server_name: "chat.law-orga.de"
+
+# Opt out of server stats reporting
+report_stats: false
 
 # CPU affinity mask. Setting this restricts the CPUs on which the
 # process will be scheduled. It is represented as a bitmask, with the
@@ -234,69 +240,22 @@ federation_ip_range_blacklist:
 #   webclient: A web client. Requires web_client_location to be set.
 #
 listeners:
-  # Main HTTPS listener
-  # For when matrix traffic is sent directly to synapse.
-  -
-    # The port to listen for HTTPS requests on.
-    port: 8448
-
-    # Local addresses to listen on.
-    # On Linux and Mac OS, `::` will listen on all IPv4 and IPv6
-    # addresses by default. For most other OSes, this will only listen
-    # on IPv6.
-    bind_addresses:
-      - '::1'
-      - '127.0.0.1'
-      # - '::'
-      # - '0.0.0.0'
-
-    # This is a 'http' listener, allows us to specify 'resources'.
-    type: http
-
-    tls: true
-
-    # Use the X-Forwarded-For (XFF) header as the client IP and not the
-    # actual client IP.
-    x_forwarded: false
-
-    # List of HTTP resources to serve on this listener.
-    resources:
-      -
-        # List of resources to host on this listener.
-        names:
-          - client     # The client-server APIs, both v1 and v2
-
-        # Should synapse compress HTTP responses to clients that support it?
-        # This should be disabled if running synapse behind a load balancer
-        # that can do automatic compression.
-        compress: true
-
-      #- names: [federation]  # Federation APIs
-      #  compress: false
-
-    # optional list of additional endpoints which can be loaded via
-    # dynamic modules
-    # additional_resources:
-    #   "/_matrix/my/custom/endpoint":
-    #     module: my_module.CustomRequestHandler
-    #     config: {}
-
   # Unsecure HTTP listener,
   # For when matrix traffic passes through loadbalancer that unwraps TLS.
   - port: 8008
     tls: false
-    bind_addresses:
-      - '::1'
-      - '127.0.0.1'
+    #  bind_addresses:
+      #- '::1'
+      #- '127.0.0.1'
       # - '::'
       # - '0.0.0.0'
     type: http
 
-    x_forwarded: false
+    x_forwarded: true
 
     resources:
-      - names: [client]
-        compress: true
+      - names: [client, keys, media, static]
+        compress: false
       #- names: [federation]
       #  compress: false
 
@@ -313,10 +272,11 @@ listeners:
 database:
   # The database engine name
   name: "psycopg2"
+  allow_unsafe_locale: true
   # Arguments to pass to the engine
   args:
     user: synapse
-    password: [% synapse_db_password %]
+    password: SYNAPSE_DB_PASSWORD
     database: synapse
     host: 195.154.71.232
     port: 30659
@@ -326,7 +286,7 @@ event_cache_size: "10K"
 
 
 # A yaml python logging config file
-log_config: "/etc/matrix-synapse/log.yaml"
+log_config: "/data/log.yaml"
 
 
 
@@ -420,23 +380,26 @@ log_config: "/etc/matrix-synapse/log.yaml"
 #enable_media_repo: false
 
 # Directory where uploaded images and attachments are stored.
-media_store_path: "/var/lib/matrix-synapse/media"
+media_store_path: "/data/media"
 
 # Media storage providers allow media to be stored in different
 # locations.
-# media_storage_providers:
-# - module: file_system
-#   # Whether to store newly uploaded local files
-#   store_local: false
-#   # Whether to store newly downloaded remote files
-#   store_remote: false
-#   # Whether to wait for successful storage for local uploads
-#   store_synchronous: false
-#   config:
-#     directory: /mnt/some/other/directory
+media_storage_providers:
+  - module: s3_storage_provider.S3StorageProviderBackend
+    # Whether to store newly uploaded local files
+    store_local: true
+    # Whether to store newly downloaded remote files
+    store_remote: true
+    # Whether to wait for successful storage for local uploads
+    store_synchronous: true
+    config:
+      bucket: law-orga-matrix-files
+      endpoint_url: https://law-orga-matrix-files.s3.fr-par.scw.cloud
+      access_key_id: SCWN52P46T36F8KAXWNV
+      secret_access_key: e8ae61c5-d30d-406c-9bb1-a5315b95af51
 
 # Directory where in-progress uploads are stored.
-uploads_path: "/var/lib/matrix-synapse/uploads"
+uploads_path: "/data/uploads"
 
 # The largest allowed upload size in bytes
 max_upload_size: "100M"
@@ -846,7 +809,7 @@ expire_access_token: False
 ## Signing Keys ##
 
 # Path to the signing key to sign messages with
-signing_key_path: "/etc/matrix-synapse/homeserver.signing.key"
+signing_key_path: "/data/homeserver.signing.key"
 
 # The keys that the server used to sign messages with but won't use
 # to sign new messages. E.g. it has lost its private key
@@ -1077,7 +1040,7 @@ oidc_config:
   # Uncomment the following to enable authorization against an OpenID Connect
   # server. Defaults to false.
   #
-  #enabled: true
+  enabled: true
 
   # Uncomment the following to disable use of the OIDC discovery mechanism to
   # discover endpoints. Defaults to true.
@@ -1089,19 +1052,19 @@ oidc_config:
   #
   # Required if 'enabled' is true.
   #
-  #issuer: "https://accounts.example.com/"
+  issuer: "http://localhost/openid"
 
   # oauth2 client id to use.
   #
   # Required if 'enabled' is true.
   #
-  #client_id: "provided-by-your-issuer"
+  client_id: "synapse"
 
   # oauth2 client secret to use.
   #
   # Required if 'enabled' is true.
   #
-  #client_secret: "provided-by-your-issuer"
+  client_secret: "foobar123"
 
   # auth method to use when exchanging the token.
   # Valid values are 'client_secret_basic' (default), 'client_secret_post' and
@@ -1290,7 +1253,7 @@ sso:
 
 # Enable password for login.
 password_config:
-   enabled: true
+   enabled: false
    # Uncomment and change to a secret random string for extra security.
    # DO NOT CHANGE THIS AFTER INITIAL SETUP!
    #
