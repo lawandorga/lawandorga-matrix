@@ -50,7 +50,7 @@ tls_fingerprints: []
 pid_file: "/var/run/matrix-synapse.pid"
 
 # Name of the server
-server_name: "chat.law-orga.de"
+server_name: "localhost:8008"
 
 # Opt out of server stats reporting
 report_stats: false
