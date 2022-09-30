@@ -50,7 +50,7 @@ tls_fingerprints: []
 pid_file: "/var/run/matrix-synapse.pid"
 
 # Name of the server
-server_name: "localhost:8008"
+server_name: "lawandorgacontainersombuzuzj-synapsedev.functions.fnc.fr-par.scw.cloud"
 
 # Opt out of server stats reporting
 report_stats: false
@@ -242,7 +242,7 @@ federation_ip_range_blacklist:
 listeners:
   # Unsecure HTTP listener,
   # For when matrix traffic passes through loadbalancer that unwraps TLS.
-  - port: 8008
+  - port: 8080
     tls: false
     #  bind_addresses:
       #- '::1'
@@ -1052,13 +1052,13 @@ oidc_config:
   #
   # Required if 'enabled' is true.
   #
-  issuer: "http://localhost/openid"
+  issuer: "https://lawandorgacontainersombuzuzj-backendoidc.functions.fnc.fr-par.scw.cloud/openid"
 
   # oauth2 client id to use.
   #
   # Required if 'enabled' is true.
   #
-  client_id: "synapse"
+  client_id: "165396"
 
   # oauth2 client secret to use.
   #
@@ -1075,7 +1075,7 @@ oidc_config:
   # list of scopes to request. This should normally include the "openid" scope.
   # Defaults to ["openid"].
   #
-  #scopes: ["openid", "profile"]
+  scopes: ["openid", "rlc"]
 
   # the oauth2 authorization endpoint. Required if provider discovery is disabled.
   #
@@ -1136,13 +1136,13 @@ oidc_config:
       #
       # This must be configured if using the default mapping provider.
       #
-      localpart_template: "{{ user.preferred_username }}"
+      localpart_template: "{{ user.matrix_localpart }}"
 
       # Jinja2 template for the display name to set on first login.
       #
       # If unset, no displayname will be set.
       #
-      #display_name_template: "{{ user.given_name }} {{ user.last_name }}"
+      display_name_template: "{{ user.name }} [{{ user.rlc }}]"
 
 
 

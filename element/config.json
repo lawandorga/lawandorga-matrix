@@ -1,8 +1,8 @@
 {
   "default_server_config": {
     "m.homeserver": {
-      "base_url": "http://localhost:8008",
-      "server_name": "chat.law-orga.de"
+      "base_url": "https://lawandorgacontainersombuzuzj-synapsedev.functions.fnc.fr-par.scw.cloud",
+      "server_name": "lawandorgacontainersombuzuzj-synapsedev.functions.fnc.fr-par.scw.cloud"
     }
   },
   "disable_custom_urls": true,
