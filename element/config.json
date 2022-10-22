@@ -2,7 +2,7 @@
   "default_server_config": {
     "m.homeserver": {
       "base_url": "https://lawandorgacontainersombuzuzj-synapsedev.functions.fnc.fr-par.scw.cloud",
-      "server_name": "lawandorgacontainersombuzuzj-synapsedev.functions.fnc.fr-par.scw.cloud"
+      "server_name": "law-orga.de"
     }
   },
   "disable_custom_urls": true,

@@ -50,7 +50,7 @@ tls_fingerprints: []
 pid_file: "/var/run/matrix-synapse.pid"
 
 # Name of the server
-server_name: "lawandorgacontainersombuzuzj-synapsedev.functions.fnc.fr-par.scw.cloud"
+server_name: "law-orga.de"
 
 # Opt out of server stats reporting
 report_stats: false
@@ -1142,7 +1142,7 @@ oidc_config:
       #
       # If unset, no displayname will be set.
       #
-      display_name_template: "{{ user.name }} [{{ user.rlc }}]"
+      display_name_template: "{{ user.name }}{% if user.rlc %} [{{ user.rlc }}]{% endif %}"
 
 
 
@@ -1381,5 +1381,6 @@ enable_group_creation: false
 # UPDATE user_directory_stream_pos SET stream_id = NULL;
 # on your database to tell it to rebuild the user_directory search indexes.
 #
-#user_directory:
-#   search_all_users: false
+user_directory:
+   enable: true
+   search_all_users: true
