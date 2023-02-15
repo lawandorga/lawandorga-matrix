@@ -82,7 +82,7 @@ report_stats: false
 # web_client_location: "/path/to/web/root"
 
 # The public-facing base URL for the client API (not including _matrix/...)
-# public_baseurl: https://example.com:8448/
+public_baseurl: https://synapse.law-orga.de/
 
 # Set the soft limit on the number of file descriptors synapse can use
 # Zero is used to indicate synapse should set the soft limit to the
@@ -395,8 +395,8 @@ media_storage_providers:
     config:
       bucket: law-orga-matrix-files
       endpoint_url: https://law-orga-matrix-files.s3.fr-par.scw.cloud
-      access_key_id: SCWN52P46T36F8KAXWNV
-      secret_access_key: e8ae61c5-d30d-406c-9bb1-a5315b95af51
+      access_key_id: SCWN26ZWGN9NWJ4SYX71
+      secret_access_key: SYNAPSE_S3_SECRET_KEY
 
 # Directory where in-progress uploads are stored.
 uploads_path: "/data/uploads"
@@ -1052,19 +1052,19 @@ oidc_config:
   #
   # Required if 'enabled' is true.
   #
-  issuer: "https://lawandorgacontainersombuzuzj-backendoidc.functions.fnc.fr-par.scw.cloud/openid"
+  issuer: "https://auth.law-orga.de/openid"
 
   # oauth2 client id to use.
   #
   # Required if 'enabled' is true.
   #
-  client_id: "165396"
+  client_id: "283821"
 
   # oauth2 client secret to use.
   #
   # Required if 'enabled' is true.
   #
-  client_secret: "foobar123"
+  client_secret: "SYNAPSE_OIDC_SECRET"
 
   # auth method to use when exchanging the token.
   # Valid values are 'client_secret_basic' (default), 'client_secret_post' and
@@ -1383,4 +1383,4 @@ enable_group_creation: false
 #
 user_directory:
    enable: true
-   search_all_users: true
+   search_all_users: false
