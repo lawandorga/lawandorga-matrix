@@ -1,7 +1,7 @@
 {
   "default_server_config": {
     "m.homeserver": {
-      "base_url": "https://lawandorgacontainersombuzuzj-synapsedev.functions.fnc.fr-par.scw.cloud",
+      "base_url": "https://synapse.law-orga.de",
       "server_name": "law-orga.de"
     }
   },
@@ -18,11 +18,6 @@
   "showLabsSettings": false,
   "default_federate": true,
   "default_theme": "light",
-  "roomDirectory": {
-    "servers": [
-      "mafiasi.de"
-    ]
-  },
   "piwik": false,
   "enable_presence_by_hs_url": {},
   "settingDefaults": {
